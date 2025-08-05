@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+
 const express = require('express');
 
 const mongoose = require('mongoose');
@@ -8,10 +9,12 @@ const bcrypt = require('bcrypt');
 
 const jwt = require('jsonwebtoken');
 
+const user = require('./saas/controllers/userController.js');
+
 
 const PORT = process.env.PORT || 3000;
 
-const app = express()
+const app = express();
 
 
 app.use(express.json());
@@ -26,11 +29,14 @@ const connectDB = async () => {
   }
 };
 
+
 connectDB();
+
+app.use('/users', user);
 
 
 app.get('/', (req, res) => {
-  res.send('API funcionando!');
+  res.send('API está funcionando');
 });
 
 app.listen(PORT, () => {
