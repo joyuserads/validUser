@@ -17,4 +17,9 @@ const authMiddleware = (req, res, next) => {
     });
 };
 
+
+function validaToken(token){
+    const publicKey = Buffer.from(process.env.JWT_PUBLIC_KEY, 'base64').toString('ascii');
+}
+
 module.exports = authMiddleware;
