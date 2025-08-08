@@ -11,7 +11,9 @@ const jwt = require('jsonwebtoken');
 
 const user = require('./saas/controllers/userController.js');
 
-
+const cart = require('./saas/routers/cart.js');
+const produto = require('./saas/controllers/produtoController.js');
+const users = require('./saas/routers/userRoutes.js');
 const PORT = process.env.PORT || 3000;
 
 const app = express();
@@ -33,7 +35,9 @@ const connectDB = async () => {
 connectDB();
 
 app.use('/users', user);
-
+app.use('/usuarios', users);
+app.use('/cart', cart);
+app.use('/produto', produto);
 
 app.get('/', (req, res) => {
   res.send('API está funcionando');

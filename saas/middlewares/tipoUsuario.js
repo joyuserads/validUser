@@ -30,12 +30,10 @@ module.exports = (req, res, next) => {
     }
     if (req.user.tipo !== 'admin') {
         return res.status(403).json({
-            mess0age: 'Acesso negado'
+            message: 'Acesso negado'
         });
     }
+     next();
     
-
-
-
 }
 
