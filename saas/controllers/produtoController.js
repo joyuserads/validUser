@@ -6,7 +6,7 @@ const api = express.Router();
 
 api.get('/produtos', async (req, res) => {
     try {
-        const produtos = await Produtos.find();
+        const produtos = await Produto.find();
         res.status(200).json(produtos);
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);

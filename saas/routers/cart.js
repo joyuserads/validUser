@@ -4,64 +4,64 @@ const produtos = require("../controllers/produtoController");
 const Cart = require("../middlewares/schema/cart");
 let cart = [];
 
-api.get("/", (req, res) => {
-    res.json({  cart });
-});
 
-api.patch("/", (req, res) => {
-    const { idProduto, quant } = req.body;
-    const itemInCart = cart.find(item => item.produto.id === idProduto);
-
-    if(itemInCart){
-        itemInCart.quant = quant;
-        return res.status(200).json({ message: "Quantidade atualizada", cart });
-    }
-
-    return res.status(404).json({ message: "Produto não encontrado no carrinho" });
-});
-
-/*api.post("/add",  async (req, res) => {
-    try{
-        const carts = await Cart.find();
-        res.status(200).json(carts);
-    }catch(error){
+api.get("/", async (req, res) => {
+    try {
+        const cart = await Cart.find();
+        res.status(200).json(cart);
+    } catch (error) {
         res.status(500).json({ message: "Erro ao buscar carrinho" });
     }
-})*/
+});
+
+api.get("/:idProduto", async (req, res) => {
+    try {
+        const { idProduto } = req.params;
+        const itemInCart = await Cart.findOne({ idProduto });
+        if (itemInCart) {
+            return res.status(200).json(itemInCart);
+        }
+        return res.status(404).json({ message: "Produto não encontrado no carrinho" });
+    } catch (error) {
+        console.error('Erro ao buscar produto no carrinho:', error);
+        return res.status(500).json({ message: "Erro ao buscar produto no carrinho" });
+    }
+});
+
+api.patch("/:idProduto", async (req, res) => {
+    const { idProduto } = req.params;
+    const { quant } = req.body;
+
+    try {
+        const itemInCart = await Cart.findOne({ idProduto });
+
+        if (itemInCart) {
+            itemInCart.quant = quant;
+            await itemInCart.save();
+            return res.status(200).json({ message: "Quantidade atualizada", itemInCart });
+        }
+
+        return res.status(404).json({ message: "Produto não encontrado no carrinho" });
+    } catch (error) {
+        console.error('Erro ao atualizar produto no carrinho:', error);
+        return res.status(500).json({ message: "Erro ao atualizar produto no carrinho" });
+    }
+});
+
 api.post("/add", async (req, res) => {
-    const { idProduto, quantidade } = req.body;
+    const { idProduto, quant } = req.body;
     try {
         // Crie um novo item no carrinho
-        //const novoItem = new Cart({ idProduto, quantidade });
-        const carts = await Cart.find().populate('idProduto');
+        const novoItem = new Cart({ idProduto, quant });
+        //const carts = await Cart.find().populate('idProduto');
         await novoItem.save();
 
-        res.status(201).json({ message: "Produto adicionado ao carrinho", item: novoItem });
+        res.status(201).json({ message: "Produto adicionado ao carrinho", novoItem });
     } catch (error) {
+        console.log('Erro ao adicionar produto ao carrinho:', error);
         res.status(500).json({ message: "Erro ao adicionar produto ao carrinho" });
     }
 });
-
-/*api.post("/add",  (req, res) => {
-    const { idProduto, quant } = req.body;
-    const produto = produtos.find(p => p.id === idProduto);
-
-
-    if(!produto) return res.status(404).json({ message: "Produto não encontrado!!"});
-
-
-    const itemInCart = cart.find( item => item.produto.id === idProduto);
-
-    if(itemInCart){
-        itemInCart.quant += quant;
-    }else{
-        cart.push({ produto, quant });
-    }
-    
-    res.status(200).json({ message: "Produto adicionado ao carrinho", cart});
-    
-});
-*/
 
 
 api.delete("/remove/:idProduto", (req, res) => {
