@@ -15,7 +15,7 @@ const cart = require('./saas/routers/cart.js');
 const produto = require('./saas/controllers/produtoController.js');
 const users = require('./saas/routers/userRoutes.js');
 const PORT = process.env.PORT || 3000;
-
+const cors = require("cors");
 const app = express();
 
 
@@ -42,6 +42,9 @@ app.use('/produto', produto);
 app.get('/', (req, res) => {
   res.send('API está funcionando');
 });
+
+// Configura CORS para aceitar requisições do frontend
+app.use(cors());
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);

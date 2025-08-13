@@ -32,9 +32,16 @@ router.post('/login', async (req, res) => {
   }
 });
 
+function rotaAdmin(req, res){
+  res.json({ message: `Bem-Vindo ADM ${req.user.name}` });
+}
+
+function rotaUser(req, res){
+  res.json({ message:  `Bem-Vindo ${req.user.name} você está logado!`  });
+}
 
 router.post('/register', async (req, res) => {
-  const { nome, email, senha } = req.body;
+  const { nome, email, senha, role } = req.body;
 
   try {
     // Verifica se o usuário já existe
@@ -50,7 +57,8 @@ router.post('/register', async (req, res) => {
     const newUser = new User({
       nome,
       email,
-      senha: hashedPassword
+      senha: hashedPassword,
+      role: role || 'user', // Define 'user' como padrão se não for fornecido
     });
 
     await newUser.save();
@@ -63,4 +71,4 @@ router.post('/register', async (req, res) => {
 });
 
 
-module.exports = router;
+module.exports = router , { rotaAdmin, rotaUser };
