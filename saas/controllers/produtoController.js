@@ -33,9 +33,9 @@ api.get('/produtos/:id', async (req, res) => {
 
 
 api.post('/produtos', async (req, res) => {
-    const {nome, preco, descricao, categoria} = req.body;
+    const {nome, preco, descricao, categoria, imagem} = req.body;
     try {
-        const novoProduto = new Produto({ nome, preco, descricao, categoria });
+        const novoProduto = new Produto({ nome, preco, descricao, categoria, imagem });
         await novoProduto.save();
         res.status(201).json(novoProduto);
     } catch (error) {
@@ -47,7 +47,7 @@ api.post('/produtos', async (req, res) => {
 
 api.put('/produtos/:id', async (req, res) => {
     const { id } = req.params;
-    const { nome, preco, descricao, categoria} = req.body;
+    const { nome, preco, descricao, categoria, imagem } = req.body;
 
     try{
         const produto = await Produtos.findBy(id);
@@ -60,6 +60,7 @@ api.put('/produtos/:id', async (req, res) => {
         produto.preco = preco;
         produto.descricao = descricao;
         produto.categoria = categoria;
+        produto.imagem = imagem;
 
         await produto.save();
         res.status(200).json(produto)

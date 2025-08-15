@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
   categoria: {
     type: String,
     required: true
+  },
+  imagem: {
+    type: String,
+    required: true
   }
 });
 const Produto = mongoose.model('Produto', userSchema);
